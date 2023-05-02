@@ -13,6 +13,14 @@ final class BoxOfficeListController: UIViewController {
     
     enum Metric {}
     
+    // MARK: - Section, DataSource
+    
+    enum Section: Int, CaseIterable {
+        case list
+    }
+    
+    typealias DataSource = UICollectionViewDiffableDataSource<Section, DailyBoxOffice>
+    
     // MARK: - Properties
     
     private let dailyBoxOfficeList: [DailyBoxOffice]! = {
@@ -20,6 +28,8 @@ final class BoxOfficeListController: UIViewController {
         let decodedData = try? JSONDecoder().decode(DailyBoxOfficeResponse.self, from: data!)
         return decodedData?.boxOfficeResult.dailyBoxOfficeList
     }()
+    
+    private var dataSource: DataSource?
     
     // MARK: - UI Components
     
@@ -70,7 +80,8 @@ extension BoxOfficeListController {
     
     private func setupCollectionView() {
         boxOfficeListCollectionView.registerCell(cellClass: BoxOfficeListCell.self)
-        boxOfficeListCollectionView.dataSource = self
+        setupCollectionViewDataSource()
+        setupInitialSnapshot()
     }
     
     private func createCollectionViewLayout() -> UICollectionViewLayout {
@@ -88,19 +99,41 @@ extension BoxOfficeListController {
 
 // MARK: UICollectionViewDataSource
 
-extension BoxOfficeListController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
-        return dailyBoxOfficeList.count
+extension BoxOfficeListController {
+    private func setupCollectionViewDataSource() {
+        dataSource = UICollectionViewDiffableDataSource(
+            collectionView: boxOfficeListCollectionView,
+            cellProvider: { collectionView, indexPath, dailyBoxOffice in
+                guard let section = Section(rawValue: indexPath.section) else {
+                    return UICollectionViewCell()
+                }
+                
+                switch section {
+                case .list:
+                    let cell = collectionView.dequeueReusableCell(cellClass: BoxOfficeListCell.self, for: indexPath)
+                    cell.configure(with: dailyBoxOffice)
+                    return cell
+                }
+            }
+        )
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(cellClass: BoxOfficeListCell.self, for: indexPath)
+    private func setupInitialSnapshot() {
+        guard let dataSource = dataSource else { return }
         
-        let boxOffice = dailyBoxOfficeList[indexPath.row]
-        cell.configure(with: boxOffice)
+        // Section 초기 설정
+        var snapshot = dataSource.snapshot()
+        snapshot.appendSections(Section.allCases)
+        dataSource.apply(snapshot)
         
-        return cell
+        // list snapshot 설정
+        var listSnapshot = NSDiffableDataSourceSectionSnapshot<DailyBoxOffice>()
+        listSnapshot.append(dailyBoxOfficeList)
+        dataSource.apply(listSnapshot, to: .list)
+        
+        // 또는, 이런 방식도 가능함
+//        var listSnapshot = dataSource.snapshot()
+//        listSnapshot.appendItems(dailyBoxOfficeList, toSection: .list)
+//        dataSource.apply(listSnapshot)
     }
 }
