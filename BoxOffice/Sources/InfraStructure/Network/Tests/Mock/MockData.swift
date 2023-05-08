@@ -10,6 +10,7 @@ import Foundation
 enum MockData {
     case boxOffice
     case movieDetail
+    case moviePoster
     
     var data: Data {
         switch self {
@@ -18,6 +19,8 @@ enum MockData {
             return data(fileName: "box_office_sample\(randomNumber)", extension: "json")
         case .movieDetail:
             return data(fileName: "movie_detail_sample", extension: "json")
+        case .moviePoster:
+            return data(fileName: "movie_poster_sample", extension: "json")
         }
     }
     

@@ -1,5 +1,5 @@
 //
-//  PosterImageDetail.swift
+//  MoviePosterDetail.swift
 //  BoxOffice
 //
 //  Created by devxsby on 2023/05/08.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PosterImageDetail: Decodable {
+struct MoviePosterDetail: Decodable {
     let collection: String
     let datetime: String
     let displaySitename: String

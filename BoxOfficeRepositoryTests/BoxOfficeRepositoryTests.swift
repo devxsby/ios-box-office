@@ -1,6 +1,6 @@
 //
-//  BoxOfficeListRepositoryTests.swift
-//  BoxOfficeListRepositoryTests
+//  BoxOfficeRepositoryTests.swift
+//  BoxOfficeRepositoryTests
 //
 //  Created by Mason Kim on 2023/05/02.
 //
@@ -8,7 +8,7 @@
 import XCTest
 @testable import BoxOffice
 
-final class BoxOfficeListRepositoryTests: XCTestCase {
+final class BoxOfficeRepositoryTests: XCTestCase {
     
     var sut: BoxOfficeRepository!
     
@@ -21,7 +21,7 @@ final class BoxOfficeListRepositoryTests: XCTestCase {
         // given
         let expectation = XCTestExpectation()
         let endpoint = MovieEndPoint.Mock.dailyBoxOffice
-        let urlSession = MockURLSession(isFailRequest: false, successData: MockData.boxOffice)
+        let urlSession = MockURLSession(isFailRequest: false, successMockData: .boxOffice)
         let router = NetworkRouter(session: urlSession)
         sut = BoxOfficeRepository(router: router)
         
@@ -47,7 +47,7 @@ final class BoxOfficeListRepositoryTests: XCTestCase {
         // given
         let expectation = XCTestExpectation()
         let endpoint = MovieEndPoint.Mock.movieDetail
-        let urlSession = MockURLSession(isFailRequest: false, successData: MockData.movieDetail)
+        let urlSession = MockURLSession(isFailRequest: false, successMockData: .movieDetail)
         let router = NetworkRouter(session: urlSession)
         sut = BoxOfficeRepository(router: router)
         
@@ -103,7 +103,7 @@ final class BoxOfficeListRepositoryTests: XCTestCase {
         // given
         let expectation = XCTestExpectation()
         let endpoint = MovieEndPoint.Mock.movieDetail
-        let urlSession = MockURLSession(isFailRequest: false, successData: MockData.movieDetail)
+        let urlSession = MockURLSession(isFailRequest: false, successMockData: .movieDetail)
         let router = NetworkRouter(session: urlSession)
         sut = BoxOfficeRepository(router: router)
         

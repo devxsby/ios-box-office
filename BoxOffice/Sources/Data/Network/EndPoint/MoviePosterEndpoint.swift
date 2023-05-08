@@ -7,11 +7,11 @@
 
 import Foundation
 
-enum ImageSearchEndpoint {
-    case fetchPosterImage(movieName: String)
+enum MoviePosterEndpoint {
+    case fetchImage(movieName: String)
 }
 
-extension ImageSearchEndpoint: EndPointType {
+extension MoviePosterEndpoint: EndPointType {
     
     var baseURL: String {
         return "https://dapi.kakao.com/v2/search"
@@ -19,7 +19,7 @@ extension ImageSearchEndpoint: EndPointType {
     
     var path: String {
         switch self {
-        case .fetchPosterImage:
+        case .fetchImage:
             return "/image"
         }
     }
@@ -34,13 +34,11 @@ extension ImageSearchEndpoint: EndPointType {
     
     var task: HTTPTask {
         switch self {
-        case let .fetchPosterImage(movieName: movieName):
+        case let .fetchImage(movieName: movieName):
             return .requestWithQueryParameters(
-                [
-                    "query": "\(movieName) 영화 포스터",
-                    "size": "1",
-                    "sort": "accuracy"
-                ]
+                ["query": "\(movieName) 영화 포스터",
+                 "size": "1",
+                 "sort": "accuracy"]
             )
         }
     }
