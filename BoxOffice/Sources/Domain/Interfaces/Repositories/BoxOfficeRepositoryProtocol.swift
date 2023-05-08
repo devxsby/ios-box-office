@@ -10,8 +10,9 @@ import Foundation
 protocol BoxOfficeRepositoryProtocol {
     typealias DailyBoxOfficeCompletion = (Result<DailyBoxOfficeResponse, NetworkError>) -> Void
     typealias MovieDetailCompletion = (Result<MovieDetailResponse, NetworkError>) -> Void
-    typealias MoviePosterCompletion = (Result<MovieDetailResponse, NetworkError>) -> Void
+    typealias MoviePosterCompletion = (Result<MoviePosterResponse, NetworkError>) -> Void
     
     func fetchDailyBoxOffice(endPoint: MovieEndPoint, completion: @escaping DailyBoxOfficeCompletion)
     func fetchMovieDetail(endPoint: MovieEndPoint, completion: @escaping MovieDetailCompletion)
+    func fetchMoviePoster(endPoint: MoviePosterEndpoint, completion: @escaping MoviePosterCompletion)
 }
