@@ -34,6 +34,10 @@ extension MovieEndPoint: EndPointType {
         }
     }
     
+    var headers: [String: String] {
+        return [:]
+    }
+    
     var task: HTTPTask {
         switch self {
         case .dailyBoxOffice(let date):

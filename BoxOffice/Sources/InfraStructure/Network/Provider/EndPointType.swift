@@ -11,5 +11,6 @@ protocol EndPointType {
     var baseURL: String { get }
     var path: String { get }
     var httpMethod: HTTPMethod { get }
+    var headers: [String: String] { get }
     var task: HTTPTask { get }
 }

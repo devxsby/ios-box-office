@@ -91,6 +91,10 @@ final class NetworkRouter: NetworkRouterProtocol {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = endPoint.httpMethod.rawValue
         
+        endPoint.headers.forEach { key, value in
+            urlRequest.setValue(value, forHTTPHeaderField: key)
+        }
+        
         return urlRequest
     }
 }

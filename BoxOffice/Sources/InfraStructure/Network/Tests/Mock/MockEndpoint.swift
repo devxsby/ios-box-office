@@ -11,5 +11,6 @@ struct MockEndpoint: EndPointType {
     var baseURL: String = ""
     var path: String = ""
     var httpMethod: HTTPMethod = .get
+    var headers: [String: String] = [:]
     var task: HTTPTask = .request    
 }
