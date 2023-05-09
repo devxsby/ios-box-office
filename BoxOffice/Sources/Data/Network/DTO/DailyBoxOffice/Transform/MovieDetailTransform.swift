@@ -20,6 +20,11 @@ extension MovieInfo {
     }
 }
 
+
+
+
+// MARK: - "20230101" -> Date 변환 로직
+
 private extension String {
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()

@@ -5,8 +5,9 @@
 //  Created by devxsby on 2023/05/08.
 //
 
-import Foundation
+import UIKit
 
 struct MoviePosterEntity {
-    let imageURL: String
+    let movieName: String
+    let image: UIImage
 }
