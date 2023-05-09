@@ -85,7 +85,7 @@ import SwiftUI
 struct MovieDetailControllerPreView: PreviewProvider {
     static var previews: some View {
         DIContainer.shared.makeMovieDetailController(
-            with: .init(code: 1231231, name: "asdasd")
+            with: BoxOfficeEntity.MovieInfo(code: 1231231, name: "asdasd")
         )
         .toPreview()
     }

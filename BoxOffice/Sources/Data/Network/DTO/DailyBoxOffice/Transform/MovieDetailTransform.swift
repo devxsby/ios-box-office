@@ -9,14 +9,14 @@ import Foundation
 
 extension MovieInfo {
     func toDomain() -> MovieDetailEntity {
-        return .init(name: name,
-                     directors: directors.map { $0.name },
-                     productionYear: Int(productionYear) ?? 0,
-                     openingDate: openingDate.convertToDate() ?? Date(),
-                     showTime: Int(showTime) ?? 0,
-                     watchGrade: audits.first?.watchGrade ?? "",
-                     genres: genres.map { $0.name },
-                     actors: actors.map { $0.name })
+        return MovieDetailEntity(name: name,
+                                 directors: directors.map { $0.name },
+                                 productionYear: Int(productionYear) ?? 0,
+                                 openingDate: openingDate.convertToDate() ?? Date(),
+                                 showTime: Int(showTime) ?? 0,
+                                 watchGrade: audits.first?.watchGrade ?? "",
+                                 genres: genres.map { $0.name },
+                                 actors: actors.map { $0.name })
     }
 }
 

@@ -16,14 +16,13 @@ extension BoxOfficeResult {
 extension DailyBoxOffice {
     func toDomain() -> BoxOfficeEntity {
         let isNew: Bool = rankStatus == .new ? true : false
-        
-        return .init(rank: UInt(rank) ?? 0,
-                     isNew: isNew,
-                     rankIntensity: Int(rankIntensity) ?? 0,
-                     movieCode: Int(movieCode) ?? 0,
-                     movieName: movieName,
-                     dailyAudienceCount: UInt(dailyAudienceCount) ?? 0,
-                     cumulativeAudience: UInt(cumulativeAudience) ?? 0
-        )
+        let movieInfo = BoxOfficeEntity.MovieInfo(code: Int(movieCode) ?? 0,
+                                                  name: movieName)
+        return BoxOfficeEntity(movieInfo: movieInfo,
+                               rank: UInt(rank) ?? 0,
+                               isNew: isNew,
+                               rankIntensity: Int(rankIntensity) ?? 0,
+                               dailyAudienceCount: UInt(dailyAudienceCount) ?? 0,
+                               cumulativeAudience: UInt(cumulativeAudience) ?? 0)
     }
 }
