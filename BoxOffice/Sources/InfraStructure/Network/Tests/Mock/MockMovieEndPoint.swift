@@ -10,6 +10,6 @@ import Foundation
 extension MovieEndPoint {
     enum Mock {
         static let dailyBoxOffice: MovieEndPoint = .dailyBoxOffice(date: "")
-        static let movieDetail: MovieEndPoint = .movieDetail(movieCode: "")
+        static let movieDetail: MovieEndPoint = .movieDetail(movieCode: 20194376)
     }
 }

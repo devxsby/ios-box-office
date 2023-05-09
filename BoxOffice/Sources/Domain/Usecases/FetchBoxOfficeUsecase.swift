@@ -39,7 +39,7 @@ final class FetchBoxOfficeUsecase: FetchBoxOfficeUsecaseProtocol {
                 let boxOfficeListEntnty = boxOfficeResponse.boxOfficeResult.toDomain()
                 completion(.success(boxOfficeListEntnty))
             case .failure(let error):
-                print(error)
+                completion(.failure(error))
             }
         }
     }

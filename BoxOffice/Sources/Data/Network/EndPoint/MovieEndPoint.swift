@@ -9,7 +9,7 @@ import Foundation
 
 enum MovieEndPoint {
     case dailyBoxOffice(date: String)
-    case movieDetail(movieCode: String)
+    case movieDetail(movieCode: Int)
 }
 
 extension MovieEndPoint: EndPointType {
@@ -45,7 +45,7 @@ extension MovieEndPoint: EndPointType {
                                                 "targetDt": date])
         case .movieDetail(let movieCode):
             return .requestWithQueryParameters(["key": APIKeys.kobisSecret,
-                                                "movieCd": movieCode])
+                                                "movieCd": "\(movieCode)"])
         }
     }
 }
