@@ -45,7 +45,6 @@ final class MovieDetailController: UIViewController {
     
     private func bindViewModel() {
         viewModel.input = .viewDidLoad
-        sampleLabel.text = String(viewModel.info.name)
     }
     
 }
@@ -84,8 +83,11 @@ import SwiftUI
 
 struct MovieDetailControllerPreView: PreviewProvider {
     static var previews: some View {
-        DIContainer.shared.makeMovieDetailController(
-            with: BoxOfficeEntity.MovieInfo(code: 1231231, name: "asdasd")
+        UINavigationController(
+            rootViewController:
+                DIContainer.shared.makeMovieDetailController(
+                    with: BoxOfficeEntity.MovieInfo(code: 1231231, name: "asdasd")
+                )
         )
         .toPreview()
     }

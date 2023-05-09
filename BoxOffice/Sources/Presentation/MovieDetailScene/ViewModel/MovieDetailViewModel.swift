@@ -29,7 +29,8 @@ final class MovieDetailViewModel: ViewModelType {
         
     @Observable var input: Input?
     private(set) var output = Output()
-    let info: BoxOfficeEntity.MovieInfo
+    
+    private let info: BoxOfficeEntity.MovieInfo
     
     // MARK: - Initialization
     
@@ -37,6 +38,7 @@ final class MovieDetailViewModel: ViewModelType {
          with info: BoxOfficeEntity.MovieInfo) {
         self.usecase = usecase
         self.info = info
+        
         bindInput()
     }
     
