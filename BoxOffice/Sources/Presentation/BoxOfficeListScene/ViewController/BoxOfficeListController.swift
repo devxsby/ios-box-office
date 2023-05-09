@@ -27,6 +27,7 @@ final class BoxOfficeListController: UIViewController {
     private lazy var boxOfficeListCollectionView: UICollectionView = {
         let collectionview = UICollectionView(frame: .zero, collectionViewLayout: createCollectionViewLayout())
         collectionview.refreshControl = refreshControl
+        collectionview.delegate = self
         collectionview.translatesAutoresizingMaskIntoConstraints = false
         return collectionview
     }()
@@ -184,6 +185,18 @@ extension BoxOfficeListController {
         var listSnapshot = NSDiffableDataSourceSectionSnapshot<BoxOfficeListViewModel.BoxOfficeCellItem>()
         listSnapshot.append(items)
         dataSource.apply(listSnapshot, to: .list)
+    }
+}
+
+extension BoxOfficeListController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let identifier = dataSource?.itemIdentifier(for: indexPath) else { return }
+        print(identifier.movieCode) // 영화 코드
+        let movieDetailVC = DIContainer.shared.makeMovieDetailController()
+        movieDetailVC.movieCode = identifier.movieCode // 띠용 ~ 무비코드를 ~
+        movieDetailVC.viewModel.movieCode = identifier.movieCode // 띠용 ~ 어디서 넘겨야 하나 ~~
+        navigationController?.pushViewController(movieDetailVC, animated: true)
+        collectionView.deselectItem(at: indexPath, animated: true)
     }
 }
 

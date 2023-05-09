@@ -29,6 +29,7 @@ final class BoxOfficeListViewModel: ViewModelType {
     
     struct BoxOfficeCellItem: Hashable {
         let isNew: Bool
+        let movieCode: Int
         let movieRankLabelText: String
         let movieRankIntensity: Int
         let movieTitleLabelText: String
@@ -75,6 +76,7 @@ final class BoxOfficeListViewModel: ViewModelType {
                 let items = boxOfficeEntities.map {
                     BoxOfficeCellItem(
                         isNew: $0.isNew,
+                        movieCode: $0.movieCode,
                         movieRankLabelText: "\($0.rank)",
                         movieRankIntensity: $0.rankIntensity,
                         movieTitleLabelText: $0.movieName,
