@@ -102,10 +102,10 @@ final class BoxOfficeListCell: UICollectionViewListCell {
     // MARK: - Public Methods
     
     func configure(with item: BoxOfficeListViewModel.BoxOfficeCellItem) {
-        movieRankLabel.text = item.movieRankLabelText
+        movieRankLabel.text = item.movieRank
         movieRankStatusLabel.attributedText = movieRankStatusLabelText(with: item)
-        movieTitleLabel.text = item.movieTitleLabelText
-        audienceCountLabel.text = item.audienceCountLabelText
+        movieTitleLabel.text = item.movieTitle
+        audienceCountLabel.text = item.audienceCount
     }
     
     func configure(with movieTitle: String) {

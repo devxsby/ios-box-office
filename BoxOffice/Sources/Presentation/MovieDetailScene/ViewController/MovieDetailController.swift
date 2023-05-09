@@ -11,8 +11,7 @@ final class MovieDetailController: UIViewController {
     
     // MARK: - Properties
     
-    let viewModel: MovieDetailViewModel
-    var movieCode: Int!
+    private let viewModel: MovieDetailViewModel
     
     // MARK: - UI Components
     
@@ -46,8 +45,7 @@ final class MovieDetailController: UIViewController {
     
     private func bindViewModel() {
         viewModel.input = .viewDidLoad
-        viewModel.movieCode = movieCode
-        sampleLabel.text = String(movieCode)
+        sampleLabel.text = String(viewModel.info.name)
     }
     
 }
@@ -86,8 +84,10 @@ import SwiftUI
 
 struct MovieDetailControllerPreView: PreviewProvider {
     static var previews: some View {
-        UINavigationController(rootViewController: DIContainer.shared.makeMovieDetailController())
-            .toPreview()
+        DIContainer.shared.makeMovieDetailController(
+            with: .init(code: 1231231, name: "asdasd")
+        )
+        .toPreview()
     }
 }
 #endif

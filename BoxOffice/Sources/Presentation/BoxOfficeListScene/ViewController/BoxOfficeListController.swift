@@ -190,11 +190,9 @@ extension BoxOfficeListController {
 
 extension BoxOfficeListController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let identifier = dataSource?.itemIdentifier(for: indexPath) else { return }
-        print(identifier.movieCode) // 영화 코드
-        let movieDetailVC = DIContainer.shared.makeMovieDetailController()
-        movieDetailVC.movieCode = identifier.movieCode // 띠용 ~ 무비코드를 ~
-        movieDetailVC.viewModel.movieCode = identifier.movieCode // 띠용 ~ 어디서 넘겨야 하나 ~~
+        guard let item = dataSource?.itemIdentifier(for: indexPath) else { return }
+        let movieInfo = BoxOfficeEntity.MovieInfo(code: item.movieCode, name: item.movieTitle)
+        let movieDetailVC = DIContainer.shared.makeMovieDetailController(with: movieInfo)
         navigationController?.pushViewController(movieDetailVC, animated: true)
         collectionView.deselectItem(at: indexPath, animated: true)
     }

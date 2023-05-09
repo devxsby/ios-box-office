@@ -27,14 +27,16 @@ final class MovieDetailViewModel: ViewModelType {
     
     private let usecase: FetchMovieDetailUsecaseProtocol
         
-    var movieCode: Int?
     @Observable var input: Input?
     private(set) var output = Output()
+    let info: BoxOfficeEntity.MovieInfo
     
     // MARK: - Initialization
     
-    init(usecase: FetchMovieDetailUsecaseProtocol) {
+    init(usecase: FetchMovieDetailUsecaseProtocol,
+         with info: BoxOfficeEntity.MovieInfo) {
         self.usecase = usecase
+        self.info = info
         bindInput()
     }
     
@@ -42,10 +44,11 @@ final class MovieDetailViewModel: ViewModelType {
     
     private func bindInput() {
         $input.bind(isFireAtBind: false) { [weak self] input in
-            guard let input = input else { return }
+            guard let input = input,
+                  let self = self else { return }
             switch input {
             case .viewDidLoad:
-                self?.fetchMovieDetail(movieCode: self?.movieCode ?? 0) // TODO: - movie code 들어가는 로직 확인하기
+                self.fetchMovieDetail(movieCode: self.info.code) // TODO: - movie code 들어가는 로직 확인하기
             }
         }
     }
