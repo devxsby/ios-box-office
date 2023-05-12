@@ -1,5 +1,5 @@
 //
-//  ImageSearchEndpoint.swift
+//  MoviePosterEndpoint.swift
 //  BoxOffice
 //
 //  Created by Mason Kim on 2023/05/08.

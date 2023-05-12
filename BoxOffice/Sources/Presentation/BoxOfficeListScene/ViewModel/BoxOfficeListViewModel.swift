@@ -11,7 +11,7 @@ final class BoxOfficeListViewModel: ViewModelType {
     
     // MARK: - Constants
     
-    enum Constants {
+    private enum Constants {
         static let dailyAudiencePrefix = "일일"
         static let cumulativeAudiencePrefix = "총"
     }
@@ -23,17 +23,8 @@ final class BoxOfficeListViewModel: ViewModelType {
     }
     
     struct Output {
-        @Observable var cellItems = [BoxOfficeCellItem]()
+        @Observable var cellItems = [BoxOfficeListCell.Item]()
         @Observable var selectedDate = Date().previousDate
-    }
-    
-    struct BoxOfficeCellItem: Hashable {
-        let isNew: Bool
-        let movieCode: Int
-        let movieRank: String
-        let movieRankIntensity: Int
-        let movieTitle: String
-        let audienceCount: String
     }
     
     // MARK: - Properties
@@ -74,12 +65,12 @@ final class BoxOfficeListViewModel: ViewModelType {
             switch result {
             case .success(let boxOfficeEntities):
                 let items = boxOfficeEntities.map {
-                    BoxOfficeCellItem(
+                    BoxOfficeListCell.Item(
+                        code: $0.movieInfo.code,
                         isNew: $0.isNew,
-                        movieCode: $0.movieInfo.code,
-                        movieRank: "\($0.rank)",
-                        movieRankIntensity: $0.rankIntensity,
-                        movieTitle: $0.movieInfo.name,
+                        name: $0.movieInfo.name,
+                        rank: "\($0.rank)",
+                        rankIntensity: $0.rankIntensity,
                         audienceCount: self.audienceCountLabelText(with: $0)
                     )
                 }

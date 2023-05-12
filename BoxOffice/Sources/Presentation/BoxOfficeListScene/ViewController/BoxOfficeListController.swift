@@ -15,12 +15,12 @@ final class BoxOfficeListController: UIViewController {
         case list
     }
     
-    typealias DataSource = UICollectionViewDiffableDataSource<Section, BoxOfficeListViewModel.BoxOfficeCellItem>
+    typealias DataSource = UICollectionViewDiffableDataSource<Section, BoxOfficeListCell.Item>
     
     // MARK: - Properties
     
     private let viewModel: BoxOfficeListViewModel
-    private var dataSource: DataSource?
+    private lazy var dataSource: DataSource = makeDataSource()
     
     // MARK: - UI Components
     
@@ -62,14 +62,18 @@ final class BoxOfficeListController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bindViewModel()
         setup()
+        bindViewModel()
+        notifyViewDidLoad()
     }
     
     // MARK: - Private Methods
     
-    private func bindViewModel() {
+    private func notifyViewDidLoad() {
         viewModel.input = .viewDidLoad
+    }
+    
+    private func bindViewModel() {
         
         viewModel.output.$cellItems.bind { [weak self] items in
             guard let self = self else { return }
@@ -85,7 +89,7 @@ final class BoxOfficeListController: UIViewController {
         }
         
         viewModel.output.$selectedDate.bind { [weak self] date in
-            guard let self else { return }
+            guard let self = self else { return }
             self.title = date.formatted("yyyy-MM-dd")
         }
     }
@@ -138,7 +142,6 @@ extension BoxOfficeListController {
     
     private func setupCollectionView() {
         boxOfficeListCollectionView.registerCell(cellClass: BoxOfficeListCell.self)
-        setupCollectionViewDataSource()
         setupInitialSnapshot()
     }
     
@@ -152,8 +155,8 @@ extension BoxOfficeListController {
 
 extension BoxOfficeListController {
     
-    private func setupCollectionViewDataSource() {
-        dataSource = UICollectionViewDiffableDataSource(
+    private func makeDataSource() -> DataSource {
+        UICollectionViewDiffableDataSource(
             collectionView: boxOfficeListCollectionView,
             cellProvider: { collectionView, indexPath, item in
                 guard let section = Section(rawValue: indexPath.section) else {
@@ -170,19 +173,15 @@ extension BoxOfficeListController {
     }
     
     private func setupInitialSnapshot() {
-        guard let dataSource = dataSource else { return }
-        
         // Section 초기 설정
         var snapshot = dataSource.snapshot()
         snapshot.appendSections(Section.allCases)
         dataSource.apply(snapshot)
     }
     
-    private func appendSnapshot(with items: [BoxOfficeListViewModel.BoxOfficeCellItem]) {
-        guard let dataSource = dataSource else { return }
-
+    private func appendSnapshot(with items: [BoxOfficeListCell.Item]) {
         // list snapshot 설정
-        var listSnapshot = NSDiffableDataSourceSectionSnapshot<BoxOfficeListViewModel.BoxOfficeCellItem>()
+        var listSnapshot = NSDiffableDataSourceSectionSnapshot<BoxOfficeListCell.Item>()
         listSnapshot.append(items)
         dataSource.apply(listSnapshot, to: .list)
     }
@@ -190,8 +189,8 @@ extension BoxOfficeListController {
 
 extension BoxOfficeListController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let item = dataSource?.itemIdentifier(for: indexPath) else { return }
-        let movieInfo = BoxOfficeEntity.MovieInfo(code: item.movieCode, name: item.movieTitle)
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
+        let movieInfo = BoxOfficeEntity.MovieInfo(code: item.code, name: item.name)
         let movieDetailVC = DIContainer.shared.makeMovieDetailController(with: movieInfo)
         navigationController?.pushViewController(movieDetailVC, animated: true)
         collectionView.deselectItem(at: indexPath, animated: true)
