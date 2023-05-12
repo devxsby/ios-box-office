@@ -34,10 +34,10 @@ final class BoxOfficeRepository: BoxOfficeRepositoryProtocol {
     // MARK: - Public Methods
     
     func fetchDailyBoxOffice(endPoint: MovieEndPoint, completion: @escaping DailyBoxOfficeCompletion) {
-        router.request(endPoint, completion: completion)
+        router.request(with: endPoint, completion: completion)
     }
     
     func fetchMovieDetail(endPoint: MovieEndPoint, completion: @escaping MovieDetailCompletion) {
-        router.request(endPoint, completion: completion)
+        router.request(with: endPoint, completion: completion)
     }
 }

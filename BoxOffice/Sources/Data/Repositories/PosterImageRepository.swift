@@ -32,12 +32,12 @@ final class PosterImageRepository: PosterImageRepositoryProtocol {
     // MARK: - Public Methods
     
     func fetchMoviePoster(endPoint: MoviePosterEndpoint, completion: @escaping MoviePosterCompletion) {
-        router.request(endPoint) { [weak self] (result: Result<MoviePosterResponse, NetworkError>) in
+        router.request(with: endPoint) { [weak self] (result: Result<MoviePosterResponse, NetworkError>) in
             guard let self = self else { return }
             switch result {
             case .success(let moviePosterResponse):
                 let imageURL = moviePosterResponse.documents.first?.imageURL ?? ""
-                router.request(withURL: imageURL) { result in
+                router.request(with: imageURL) { result in
                     switch result {
                     case .success(let data):
                         guard let image = UIImage(data: data) else {
@@ -50,7 +50,7 @@ final class PosterImageRepository: PosterImageRepositoryProtocol {
                         completion(.failure(error))
                     }
                 }
-                self.router.cancel(withURL: imageURL)
+                self.router.cancel(with: imageURL)
             case .failure(let error):
                 completion(.failure(error))
             }

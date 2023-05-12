@@ -25,7 +25,7 @@ final class NetworkRouterTests: XCTestCase {
         sut = NetworkRouter(session: urlSession)
         
         // when
-        sut.request(endpoint) { (result: Result<Data, NetworkError>) in
+        sut.request(with: endpoint) { (result: Result<Data, NetworkError>) in
             
             // then
             switch result {
@@ -53,7 +53,7 @@ final class NetworkRouterTests: XCTestCase {
         let urlSession = MockURLSession(isFailRequest: true)
         sut = NetworkRouter(session: urlSession)
         
-        sut.request(endpoint) { (result: Result<Data, NetworkError>) in
+        sut.request(with: endpoint) { (result: Result<Data, NetworkError>) in
 
             // then
             switch result {

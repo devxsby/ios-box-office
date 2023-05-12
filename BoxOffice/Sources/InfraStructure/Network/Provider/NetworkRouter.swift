@@ -8,12 +8,12 @@
 import Foundation
 
 protocol NetworkRouterProtocol: AnyObject {
-    func request<T: Decodable>(_ endPoint: EndPointType,
+    func request<T: Decodable>(with endPoint: EndPointType,
                                completion: @escaping (Result<T, NetworkError>) -> Void)
-    func request(withURL urlString: String,
+    func request(with urlString: String,
                  completion: @escaping (Result<Data, NetworkError>) -> Void)
-    func cancel(withEndpoint endPoint: EndPointType)
-    func cancel(withURL url: String)
+    func cancel(with endPoint: EndPointType)
+    func cancel(with url: String)
 }
 
 final class NetworkRouter: NetworkRouterProtocol {
@@ -32,7 +32,7 @@ final class NetworkRouter: NetworkRouterProtocol {
     
     // MARK: - Public Methods
     
-    func request<T: Decodable>(_ endPoint: EndPointType,
+    func request<T: Decodable>(with endPoint: EndPointType,
                                completion: @escaping (Result<T, NetworkError>) -> Void) {
         guard let urlRequest = buildRequest(from: endPoint) else {
             completion(.failure(.invalidURL))
@@ -54,7 +54,7 @@ final class NetworkRouter: NetworkRouterProtocol {
         }
     }
     
-    func request(withURL urlString: String,
+    func request(with urlString: String,
                  completion: @escaping (Result<Data, NetworkError>) -> Void) {
         guard let url = URL(string: urlString) else {
             completion(.failure(.invalidURL))
@@ -65,12 +65,12 @@ final class NetworkRouter: NetworkRouterProtocol {
         return perform(request: urlRequest, completion: completion)
     }
     
-    func cancel(withEndpoint endPoint: EndPointType) {
+    func cancel(with endPoint: EndPointType) {
         guard let request = buildRequest(from: endPoint) else { return }
         tasks[request]?.cancel()
     }
     
-    func cancel(withURL url: String) {
+    func cancel(with url: String) {
         guard let url = URL(string: url) else { return }
         let request = URLRequest(url: url)
         tasks[request]?.cancel()
