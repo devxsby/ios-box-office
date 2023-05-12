@@ -35,7 +35,7 @@ enum RankStatus: String, Decodable {
 // MARK: - Domain 레이어의 Entity로 변환 로직
 
 extension DailyBoxOffice {
-    func toDomain() -> BoxOfficeEntity {
+    func toEntity() -> BoxOfficeEntity {
         let isNew: Bool = rankStatus == .new ? true : false
         
         return BoxOfficeEntity(movieInfo: BoxOfficeEntity.MovieInfo(code: Int(movieCode) ?? 0, name: movieName),

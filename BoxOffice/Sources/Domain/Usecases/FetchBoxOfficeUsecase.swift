@@ -36,7 +36,7 @@ final class FetchBoxOfficeUsecase: FetchBoxOfficeUsecaseProtocol {
         repository.fetchDailyBoxOffice(endPoint: .dailyBoxOffice(date: date.formatted("yyyyMMdd"))) { result in
             switch result {
             case .success(let boxOfficeResponse):
-                let boxOfficeListEntnty = boxOfficeResponse.boxOfficeResult.toDomain()
+                let boxOfficeListEntnty = boxOfficeResponse.boxOfficeResult.toEntity()
                 completion(.success(boxOfficeListEntnty))
             case .failure(let error):
                 completion(.failure(error))

@@ -38,7 +38,7 @@ final class FetchMovieDetailUsecase: FetchMovieDetailUsecaseProtocol {
         repository.fetchMovieDetail(endPoint: .movieDetail(movieCode: movieCode)) { result in
             switch result {
             case .success(let movieDetailResponse):
-                let entity = movieDetailResponse.movieInfoResult.movieInfo.toDomain()
+                let entity = movieDetailResponse.movieInfoResult.movieInfo.toEntity()
                 completion(.success(entity))
             case .failure(let error):
                 completion(.failure(error))

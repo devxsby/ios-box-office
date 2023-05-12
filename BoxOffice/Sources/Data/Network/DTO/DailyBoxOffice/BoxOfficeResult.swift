@@ -18,7 +18,7 @@ struct BoxOfficeResult: Decodable {
 // MARK: - Domain 레이어의 Entity로 변환 로직
 
 extension BoxOfficeResult {
-    func toDomain() -> [BoxOfficeEntity] {
-        return dailyBoxOfficeList.map { $0.toDomain() }
+    func toEntity() -> [BoxOfficeEntity] {
+        return dailyBoxOfficeList.map { $0.toEntity() }
     }
 }

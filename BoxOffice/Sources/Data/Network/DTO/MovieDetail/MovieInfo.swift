@@ -34,7 +34,7 @@ struct MovieInfo: Decodable {
 // MARK: - Domain 레이어의 Entity로 변환 로직
 
 extension MovieInfo {
-    func toDomain() -> MovieDetailEntity {
+    func toEntity() -> MovieDetailEntity {
         return MovieDetailEntity(name: name,
                                  directors: directors.map { $0.name },
                                  productionYear: Int(productionYear) ?? 0,
