@@ -50,7 +50,6 @@ final class PosterImageRepository: PosterImageRepositoryProtocol {
                         completion(.failure(error))
                     }
                 }
-                self.router.cancel(with: imageURL)
             case .failure(let error):
                 completion(.failure(error))
             }
