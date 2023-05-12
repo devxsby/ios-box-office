@@ -31,4 +31,5 @@ final class ImageCacheManager {
         cacheManager.setObject(value, forKey: key as NSString)
     }
     
+    // TODO: 코어 데이터에 저장
 }

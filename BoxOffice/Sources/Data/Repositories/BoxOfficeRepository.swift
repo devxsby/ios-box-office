@@ -12,11 +12,9 @@ import Foundation
 protocol BoxOfficeRepositoryProtocol {
     typealias DailyBoxOfficeCompletion = (Result<DailyBoxOfficeResponse, NetworkError>) -> Void
     typealias MovieDetailCompletion = (Result<MovieDetailResponse, NetworkError>) -> Void
-    typealias MoviePosterCompletion = (Result<MoviePosterResponse, NetworkError>) -> Void
     
     func fetchDailyBoxOffice(endPoint: MovieEndPoint, completion: @escaping DailyBoxOfficeCompletion)
     func fetchMovieDetail(endPoint: MovieEndPoint, completion: @escaping MovieDetailCompletion)
-    func fetchMoviePoster(endPoint: MoviePosterEndpoint, completion: @escaping MoviePosterCompletion)
 }
 
 // MARK: - BoxOfficeRepository
@@ -40,10 +38,6 @@ final class BoxOfficeRepository: BoxOfficeRepositoryProtocol {
     }
     
     func fetchMovieDetail(endPoint: MovieEndPoint, completion: @escaping MovieDetailCompletion) {
-        router.request(endPoint, completion: completion)
-    }
-    
-    func fetchMoviePoster(endPoint: MoviePosterEndpoint, completion: @escaping MoviePosterCompletion) {
         router.request(endPoint, completion: completion)
     }
 }
