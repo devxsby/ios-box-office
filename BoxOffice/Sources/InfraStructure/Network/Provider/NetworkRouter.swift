@@ -12,14 +12,15 @@ protocol NetworkRouterProtocol: AnyObject {
                                completion: @escaping (Result<T, NetworkError>) -> Void)
     func request(withURL urlString: String,
                  completion: @escaping (Result<Data, NetworkError>) -> Void)
-    func cancel()
+    func cancel(withEndpoint endPoint: EndPointType)
+    func cancel(withURL url: String)
 }
 
 final class NetworkRouter: NetworkRouterProtocol {
     
     // MARK: - Properties
     
-    private var task: URLSessionDataTask?
+    private var tasks: [URLRequest: URLSessionDataTask] = [:]
     private let session: URLSessionProtocol
     private let decoder = JSONDecoder()
     
@@ -61,18 +62,27 @@ final class NetworkRouter: NetworkRouterProtocol {
         }
         let urlRequest = URLRequest(url: url)
         
-        perform(request: urlRequest, completion: completion)
+        return perform(request: urlRequest, completion: completion)
     }
     
-    func cancel() {
-        self.task?.cancel()
+    func cancel(withEndpoint endPoint: EndPointType) {
+        guard let request = buildRequest(from: endPoint) else { return }
+        tasks[request]?.cancel()
+    }
+    
+    func cancel(withURL url: String) {
+        guard let url = URL(string: url) else { return }
+        let request = URLRequest(url: url)
+        tasks[request]?.cancel()
     }
     
     // MARK: - Private Methods
     
     private func perform(request: URLRequest,
                          completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        task = session.dataTask(with: request, completionHandler: { data, response, error in
+        let task = session.dataTask(with: request, completionHandler: { [weak self] data, response, error in
+            self?.tasks.removeValue(forKey: request)
+            
             if let error = error {
                 completion(.failure(.transportError(error)))
                 return
@@ -92,7 +102,9 @@ final class NetworkRouter: NetworkRouterProtocol {
             completion(.success(data))
         })
         
-        self.task?.resume()
+        task.resume()
+        
+        tasks.updateValue(task, forKey: request)
     }
     
     private func buildRequest(from endPoint: EndPointType) -> URLRequest? {
