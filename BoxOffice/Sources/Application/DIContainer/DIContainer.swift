@@ -14,27 +14,29 @@ final class DIContainer {
     static let shared = DIContainer()
     
     private let router: NetworkRouterProtocol
-    private let repository: BoxOfficeRepositoryProtocol
+    private let boxOfficeRepository: BoxOfficeRepositoryProtocol
+    private let imageRepository: PosterImageRepositoryProtocol
     
     // MARK: - Initialization
     
     private init() {
         self.router = NetworkRouter()
-        self.repository = BoxOfficeRepository(router: router)
+        self.boxOfficeRepository = BoxOfficeRepository(router: router)
+        self.imageRepository = PosterImageRepository(router: router)
     }
     
     // MARK: - Public Methods
     
     func makeBoxOfficeListController() -> BoxOfficeListController {
-//        let usecase = FetchBoxOfficeUsecase(repository: repository)
-        let viewModel = BoxOfficeListViewModel(repository: repository)
+        let viewModel = BoxOfficeListViewModel(repository: boxOfficeRepository)
         let viewController = BoxOfficeListController(viewModel: viewModel)
         return viewController
     }
     
     func makeMovieDetailController(with info: BoxOfficeEntity.MovieInfo) -> MovieDetailController {
-//        let usecase = FetchMovieDetailUsecase(repository: repository)
-        let viewModel = MovieDetailViewModel(repository: repository, with: info)
+        let viewModel = MovieDetailViewModel(repository: boxOfficeRepository,
+                                             imageRepository: imageRepository,
+                                             with: info)
         let viewController = MovieDetailController(viewModel: viewModel)
         return viewController
     }

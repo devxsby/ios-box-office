@@ -65,6 +65,7 @@
 		B4CB59EE2A0DD054006ABFC6 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CB59ED2A0DD054006ABFC6 /* ImageManager.swift */; };
 		B4CB59F02A0DD065006ABFC6 /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CB59EF2A0DD065006ABFC6 /* ImageCacheManager.swift */; };
 		B4CB59F12A0DD1D6006ABFC6 /* MoviePosterEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44F29DB2A08DE7900D4CAE9 /* MoviePosterEndpoint.swift */; };
+		B4CB59F32A0E0A9F006ABFC6 /* DefaultEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CB59F22A0E0A9F006ABFC6 /* DefaultEndpoint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -158,6 +159,7 @@
 		B4B813D62A01095500D32963 /* ReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableView.swift; sourceTree = "<group>"; };
 		B4CB59ED2A0DD054006ABFC6 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		B4CB59EF2A0DD065006ABFC6 /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
+		B4CB59F22A0E0A9F006ABFC6 /* DefaultEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultEndpoint.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -277,6 +279,7 @@
 			children = (
 				8E854F0229FA58DA00F2F6F7 /* MovieEndPoint.swift */,
 				B44F29DB2A08DE7900D4CAE9 /* MoviePosterEndpoint.swift */,
+				B4CB59F22A0E0A9F006ABFC6 /* DefaultEndpoint.swift */,
 			);
 			path = EndPoint;
 			sourceTree = "<group>";
@@ -797,6 +800,7 @@
 				B4CB59F02A0DD065006ABFC6 /* ImageCacheManager.swift in Sources */,
 				8EB3BAF82A08E0E300F895F9 /* MoviePosterDetail.swift in Sources */,
 				8E854F1129FB597400F2F6F7 /* Director.swift in Sources */,
+				B4CB59F32A0E0A9F006ABFC6 /* DefaultEndpoint.swift in Sources */,
 				8E854F0329FA58DA00F2F6F7 /* MovieEndPoint.swift in Sources */,
 				B4B813CA2A00FF7900D32963 /* BoxOfficeListCell.swift in Sources */,
 				8EB3BAEC2A0882C700F895F9 /* Date+Format.swift in Sources */,

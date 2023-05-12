@@ -25,7 +25,8 @@ final class MovieDetailViewModel: ViewModelType {
     
     // MARK: - Properties
     
-    private let repository: BoxOfficeRepositoryProtocol
+    private let boxOfficeRepository: BoxOfficeRepositoryProtocol
+    private let imageRepository: PosterImageRepositoryProtocol
 
     @Observable var input: Input?
     private(set) var output = Output()
@@ -35,8 +36,10 @@ final class MovieDetailViewModel: ViewModelType {
     // MARK: - Initialization
     
     init(repository: BoxOfficeRepositoryProtocol,
+         imageRepository: PosterImageRepositoryProtocol,
          with info: BoxOfficeEntity.MovieInfo) {
-        self.repository = repository
+        self.boxOfficeRepository = repository
+        self.imageRepository = imageRepository
         self.info = info
         
         bindInput()
@@ -51,16 +54,28 @@ final class MovieDetailViewModel: ViewModelType {
             switch input {
             case .viewDidLoad:
                 self.fetchMovieDetail(movieCode: self.info.code) // TODO: - movie code 들어가는 로직 확인하기
+                self.fetchMoviePosterImage()
             }
         }
     }
     
     private func fetchMovieDetail(movieCode: Int) {
-        repository.fetchMovieDetail(endPoint: .movieDetail(movieCode: movieCode)) { result in
+        boxOfficeRepository.fetchMovieDetail(endPoint: .movieDetail(movieCode: movieCode)) { result in
             switch result {
             case .success(let movieDetailResponse):
                 let entity = movieDetailResponse.movieInfoResult.movieInfo.toEntity()
                 
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    private func fetchMoviePosterImage() {
+        imageRepository.fetchMoviePoster(endPoint: .fetchImage(movieName: info.name)) { result in
+            switch result {
+            case .success(let entity):
+                print(entity.image)
             case .failure(let error):
                 print(error)
             }
