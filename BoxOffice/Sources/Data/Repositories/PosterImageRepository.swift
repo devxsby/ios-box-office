@@ -44,7 +44,6 @@ final class PosterImageRepository: PosterImageRepositoryProtocol {
                             completion(.failure(.parseError))
                             return
                         }
-                        // 10초 후애ㅔ...
                         completion(.success(image))
                     case .failure(let error):
                         completion(.failure(error))
