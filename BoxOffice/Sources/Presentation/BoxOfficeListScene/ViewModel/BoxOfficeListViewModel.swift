@@ -29,15 +29,15 @@ final class BoxOfficeListViewModel: ViewModelType {
     
     // MARK: - Properties
     
-    private let usecase: FetchBoxOfficeUsecaseProtocol
+    private let repository: BoxOfficeRepositoryProtocol
     
     @Observable var input: Input?
     private(set) var output = Output()
     
     // MARK: - Initialization
     
-    init(usecase: FetchBoxOfficeUsecaseProtocol) {
-        self.usecase = usecase
+    init(repository: BoxOfficeRepositoryProtocol) {
+        self.repository = repository
         bindInput()
     }
     
@@ -59,12 +59,16 @@ final class BoxOfficeListViewModel: ViewModelType {
     }
     
     private func fetchBoxOffice(of date: Date) {
-        usecase.fetchBoxOffice(of: date) { [weak self] result in
+        repository.fetchDailyBoxOffice(
+            endPoint: .dailyBoxOffice(date: date.formatted("yyyyMMdd"))
+        ) { [weak self] result in
             guard let self = self else { return }
-            
+
             switch result {
-            case .success(let boxOfficeEntities):
-                let items = boxOfficeEntities.map {
+            case .success(let boxOfficeResponse):
+                let boxOfficeListEntity = boxOfficeResponse.boxOfficeResult.toEntity()
+                
+                let items = boxOfficeListEntity.map {
                     BoxOfficeListCell.Item(
                         code: $0.movieInfo.code,
                         isNew: $0.isNew,
@@ -76,6 +80,7 @@ final class BoxOfficeListViewModel: ViewModelType {
                 }
                 
                 self.output.cellItems = items
+                
             case .failure(let error):
                 print(error)
             }
@@ -83,7 +88,6 @@ final class BoxOfficeListViewModel: ViewModelType {
     }
     
     private func audienceCountLabelText(with boxOffice: BoxOfficeEntity) -> String {
-        
         guard let formattedDailyAudienceCount = boxOffice.dailyAudienceCount.formatWithCommas(),
               let formattedCumulativeAudience = boxOffice.cumulativeAudience.formatWithCommas() else {
             return ""

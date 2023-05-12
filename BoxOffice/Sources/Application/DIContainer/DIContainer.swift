@@ -26,15 +26,15 @@ final class DIContainer {
     // MARK: - Public Methods
     
     func makeBoxOfficeListController() -> BoxOfficeListController {
-        let usecase = FetchBoxOfficeUsecase(repository: repository)
-        let viewModel = BoxOfficeListViewModel(usecase: usecase)
+//        let usecase = FetchBoxOfficeUsecase(repository: repository)
+        let viewModel = BoxOfficeListViewModel(repository: repository)
         let viewController = BoxOfficeListController(viewModel: viewModel)
         return viewController
     }
     
     func makeMovieDetailController(with info: BoxOfficeEntity.MovieInfo) -> MovieDetailController {
-        let usecase = FetchMovieDetailUsecase(repository: repository)
-        let viewModel = MovieDetailViewModel(usecase: usecase, with: info)
+//        let usecase = FetchMovieDetailUsecase(repository: repository)
+        let viewModel = MovieDetailViewModel(repository: repository, with: info)
         let viewController = MovieDetailController(viewModel: viewModel)
         return viewController
     }

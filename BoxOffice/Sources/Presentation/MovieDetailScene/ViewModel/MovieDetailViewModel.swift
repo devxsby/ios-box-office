@@ -25,8 +25,8 @@ final class MovieDetailViewModel: ViewModelType {
     
     // MARK: - Properties
     
-    private let usecase: FetchMovieDetailUsecaseProtocol
-        
+    private let repository: BoxOfficeRepositoryProtocol
+
     @Observable var input: Input?
     private(set) var output = Output()
     
@@ -34,9 +34,9 @@ final class MovieDetailViewModel: ViewModelType {
     
     // MARK: - Initialization
     
-    init(usecase: FetchMovieDetailUsecaseProtocol,
+    init(repository: BoxOfficeRepositoryProtocol,
          with info: BoxOfficeEntity.MovieInfo) {
-        self.usecase = usecase
+        self.repository = repository
         self.info = info
         
         bindInput()
@@ -56,12 +56,11 @@ final class MovieDetailViewModel: ViewModelType {
     }
     
     private func fetchMovieDetail(movieCode: Int) {
-        usecase.fetchMovieDetail(of: movieCode) { [weak self] result in
-            guard let self = self else { return }
-            
+        repository.fetchMovieDetail(endPoint: .movieDetail(movieCode: movieCode)) { result in
             switch result {
-            case .success(let movieDetialEntities):
-                print(movieDetialEntities)
+            case .success(let movieDetailResponse):
+                let entity = movieDetailResponse.movieInfoResult.movieInfo.toEntity()
+                
             case .failure(let error):
                 print(error)
             }

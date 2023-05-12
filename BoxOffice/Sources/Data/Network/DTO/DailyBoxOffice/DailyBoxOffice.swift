@@ -32,7 +32,7 @@ enum RankStatus: String, Decodable {
     case old = "OLD"
 }
 
-// MARK: - Domain 레이어의 Entity로 변환 로직
+// MARK: - Entity로 변환 로직
 
 extension DailyBoxOffice {
     func toEntity() -> BoxOfficeEntity {
