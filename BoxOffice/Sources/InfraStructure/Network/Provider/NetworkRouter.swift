@@ -10,6 +10,8 @@ import Foundation
 protocol NetworkRouterProtocol: AnyObject {
     func request<T: Decodable>(_ endPoint: EndPointType,
                                completion: @escaping (Result<T, NetworkError>) -> Void)
+    func request(withURL urlString: String,
+                 completion: @escaping (Result<Data, NetworkError>) -> Void)
     func cancel()
 }
 
@@ -31,12 +33,45 @@ final class NetworkRouter: NetworkRouterProtocol {
     
     func request<T: Decodable>(_ endPoint: EndPointType,
                                completion: @escaping (Result<T, NetworkError>) -> Void) {
-        
-        guard let request = buildRequest(from: endPoint) else {
+        guard let urlRequest = buildRequest(from: endPoint) else {
             completion(.failure(.invalidURL))
             return
         }
         
+        perform(request: urlRequest) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    let decodedData = try self.decoder.decode(T.self, from: data)
+                    completion(.success(decodedData))
+                } catch {
+                    completion(.failure(.parseError))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func request(withURL urlString: String,
+                 completion: @escaping (Result<Data, NetworkError>) -> Void) {
+        guard let url = URL(string: urlString) else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        let urlRequest = URLRequest(url: url)
+        
+        perform(request: urlRequest, completion: completion)
+    }
+    
+    func cancel() {
+        self.task?.cancel()
+    }
+    
+    // MARK: - Private Methods
+    
+    private func perform(request: URLRequest,
+                         completion: @escaping (Result<Data, NetworkError>) -> Void) {
         task = session.dataTask(with: request, completionHandler: { data, response, error in
             if let error = error {
                 completion(.failure(.transportError(error)))
@@ -54,22 +89,11 @@ final class NetworkRouter: NetworkRouterProtocol {
                 return
             }
             
-            do {
-                let decodedData = try self.decoder.decode(T.self, from: data)
-                completion(.success(decodedData))
-            } catch {
-                completion(.failure(.parseError))
-            }
+            completion(.success(data))
         })
         
         self.task?.resume()
     }
-    
-    func cancel() {
-        self.task?.cancel()
-    }
-    
-    // MARK: - Private Methods
     
     private func buildRequest(from endPoint: EndPointType) -> URLRequest? {
         

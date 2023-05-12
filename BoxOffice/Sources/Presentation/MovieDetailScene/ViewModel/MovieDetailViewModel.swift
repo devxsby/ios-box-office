@@ -74,8 +74,8 @@ final class MovieDetailViewModel: ViewModelType {
     private func fetchMoviePosterImage() {
         imageRepository.fetchMoviePoster(endPoint: .fetchImage(movieName: info.name)) { result in
             switch result {
-            case .success(let entity):
-                print(entity.image)
+            case .success(let image):
+                print(image)
             case .failure(let error):
                 print(error)
             }

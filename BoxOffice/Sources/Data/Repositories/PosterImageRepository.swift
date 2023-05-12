@@ -10,7 +10,7 @@ import UIKit
 // MARK: - Protocols
 
 protocol PosterImageRepositoryProtocol {
-    typealias MoviePosterCompletion = (Result<MoviePosterEntity, NetworkError>) -> Void
+    typealias MoviePosterCompletion = (Result<UIImage, NetworkError>) -> Void
     
     func fetchMoviePoster(endPoint: MoviePosterEndpoint, completion: @escaping MoviePosterCompletion)
 }
@@ -37,20 +37,16 @@ final class PosterImageRepository: PosterImageRepositoryProtocol {
             switch result {
             case .success(let moviePosterResponse):
                 let imageURL = moviePosterResponse.documents.first?.imageURL ?? ""
-                
-                let imageEndpoint = DefaultEndpoint(urlString: imageURL)
-                self.router.request(imageEndpoint) { (result: Result<Data, NetworkError>) in
+                router.request(withURL: imageURL) { result in
                     switch result {
                     case .success(let data):
                         guard let image = UIImage(data: data) else {
-                            completion(.failure(.invalidData))
+                            completion(.failure(.parseError))
                             return
                         }
-                        let entity = MoviePosterEntity(movieName: "?????이름 넣어야 함 parameter에서!!", image: image)
-                        completion(.success(entity))
+                        completion(.success(image))
                     case .failure(let error):
                         completion(.failure(error))
-                        return
                     }
                 }
             case .failure(let error):
