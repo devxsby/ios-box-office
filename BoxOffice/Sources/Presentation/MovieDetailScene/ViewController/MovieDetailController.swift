@@ -39,10 +39,14 @@ final class MovieDetailController: UIViewController {
         return imageView
     }()
     
-    private let directorView = MovieDetailRowView()
+    private let detailRowViews = DetailRowType.allCases.map {
+        MovieDetailRowView(with: $0)
+    }
+    
+//    private let directorView = MovieDetailRowView()
     
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [posterImageView, directorView])
+        let stackView = UIStackView(arrangedSubviews: [posterImageView] + detailRowViews)
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.alignment = .fill
@@ -91,7 +95,9 @@ final class MovieDetailController: UIViewController {
                   let info = info else { return }
             
             DispatchQueue.main.async {
-                print(info)
+                self.detailRowViews.forEach {
+                    $0.setupData(with: info)
+                }
             }
         }
         
