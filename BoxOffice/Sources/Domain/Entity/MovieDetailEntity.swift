@@ -14,6 +14,7 @@ struct MovieDetailEntity {
     let openingDate: Date
     let showTime: Int
     let watchGrade: String
+    let nations: [String]
     let genres: [String]
     let actors: [String]
 }

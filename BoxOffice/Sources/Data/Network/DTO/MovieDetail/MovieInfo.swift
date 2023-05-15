@@ -13,6 +13,7 @@ struct MovieInfo: Decodable {
     let showTime: String
     let productionYear: String
     let openingDate: String
+    let nations: [Nation]
     let genres: [Genre]
     let directors: [Director]
     let actors: [Actor]
@@ -24,6 +25,7 @@ struct MovieInfo: Decodable {
         case showTime = "showTm"
         case productionYear = "prdtYear"
         case openingDate = "openDt"
+        case nations
         case genres
         case directors
         case actors
@@ -41,8 +43,10 @@ extension MovieInfo {
                                  openingDate: openingDate.convertToDate() ?? Date(),
                                  showTime: Int(showTime) ?? 0,
                                  watchGrade: audits.first?.watchGrade ?? "",
+                                 nations: nations.map { $0.name },
                                  genres: genres.map { $0.name },
-                                 actors: actors.map { $0.name })
+                                 actors: actors.map { $0.name }
+        )
     }
 }
 

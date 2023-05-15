@@ -5,7 +5,7 @@
 //  Created by devxsby on 2023/05/09.
 //
 
-import Foundation
+import UIKit
 
 final class MovieDetailViewModel: ViewModelType {
     
@@ -20,7 +20,17 @@ final class MovieDetailViewModel: ViewModelType {
     }
     
     struct Output {
+        @Observable var image = UIImage()
         
+        // 이거도 한번 더 감쌀지?
+        @Observable var directors = String()
+        var productionYear = String()
+        var openingDate = String()
+        var showTime = String()
+        var watchGrade = String()
+        var nation = String()
+        var genres = String()
+        var actors = String()
     }
     
     // MARK: - Properties
@@ -53,7 +63,7 @@ final class MovieDetailViewModel: ViewModelType {
                   let self = self else { return }
             switch input {
             case .viewDidLoad:
-                self.fetchMovieDetail(movieCode: self.info.code) // TODO: - movie code 들어가는 로직 확인하기
+                self.fetchMovieDetail(movieCode: self.info.code)
                 self.fetchMoviePosterImage()
             }
         }
@@ -65,6 +75,16 @@ final class MovieDetailViewModel: ViewModelType {
             case .success(let movieDetailResponse):
                 let entity = movieDetailResponse.movieInfoResult.movieInfo.toEntity()
                 
+                let output = Output(directors: entity.directors.joined(separator: ", "),
+                                    productionYear: String(entity.productionYear),
+                                    openingDate: entity.openingDate.formatted("yyyy"),
+                                    showTime: String(entity.showTime),
+                                    watchGrade: entity.watchGrade,
+                                    nation: entity.nations.joined(separator: ", "),
+                                    genres: entity.genres.joined(separator: ", "),
+                                    actors: entity.actors.joined(separator: ", ")
+                )
+                self.output = output
             case .failure(let error):
                 print(error)
             }
@@ -75,7 +95,7 @@ final class MovieDetailViewModel: ViewModelType {
         imageRepository.fetchMoviePoster(endPoint: .fetchImage(movieName: info.name)) { result in
             switch result {
             case .success(let image):
-                print(image)
+                self.output.image = image
             case .failure(let error):
                 print(error)
             }
