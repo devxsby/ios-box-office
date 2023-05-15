@@ -28,7 +28,7 @@ final class MovieDetailController: UIViewController {
         return imageView
     }()
     
-    private let directorView = SingleDetailView()
+    private let directorView = MovieDetailRowView()
     
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [posterImageView, directorView])

@@ -1,5 +1,5 @@
 //
-//  SingleDetailView.swift
+//  MovieDetailRowView.swift
 //  BoxOffice
 //
 //  Created by devxsby on 2023/05/15.
@@ -7,23 +7,21 @@
 
 import UIKit
 
-final class SingleDetailView: UIView {
+final class MovieDetailRowView: UIView {
     
     // MARK: - UI Components
     
-    private var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-//        label.font = .preferredFont(forTextStyle: .)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private var subtitleLabel: UILabel = {
+    private let subtitleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textColor = .black
-//        label.font = .preferredFont(forTextStyle: .title3)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -31,7 +29,7 @@ final class SingleDetailView: UIView {
     // MARK: - Initialization
     
     override init(frame: CGRect) {
-        super.init(frame: .zero)
+        super.init(frame: frame)
         setup()
     }
     
@@ -42,7 +40,7 @@ final class SingleDetailView: UIView {
 
 // MARK: - UI & Layout
 
-extension SingleDetailView {
+extension MovieDetailRowView {
     
     private func setup() {
         
@@ -52,11 +50,12 @@ extension SingleDetailView {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+            titleLabel.widthAnchor.constraint(equalToConstant: 100)
         ])
         
         NSLayoutConstraint.activate([
-            subtitleLabel.centerXAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: -10),
+            subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: -10),
             subtitleLabel.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
         ])
     }
@@ -64,7 +63,7 @@ extension SingleDetailView {
 
 // MARK: - Methods
 
-extension SingleDetailView {
+extension MovieDetailRowView {
     
     func setData(title: String, subtitle: String) {
         titleLabel.text = title
