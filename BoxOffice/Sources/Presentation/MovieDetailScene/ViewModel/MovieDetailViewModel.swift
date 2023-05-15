@@ -20,17 +20,8 @@ final class MovieDetailViewModel: ViewModelType {
     }
     
     struct Output {
-        @Observable var image = UIImage()
-        
-        // 이거도 한번 더 감쌀지?
-        @Observable var directors = String()
-        var productionYear = String()
-        var openingDate = String()
-        var showTime = String()
-        var watchGrade = String()
-        var nation = String()
-        var genres = String()
-        var actors = String()
+        @Observable var image: UIImage?
+        @Observable var info: MovieDetailController.Info?
     }
     
     // MARK: - Properties
@@ -75,16 +66,14 @@ final class MovieDetailViewModel: ViewModelType {
             case .success(let movieDetailResponse):
                 let entity = movieDetailResponse.movieInfoResult.movieInfo.toEntity()
                 
-                let output = Output(directors: entity.directors.joined(separator: ", "),
-                                    productionYear: String(entity.productionYear),
-                                    openingDate: entity.openingDate.formatted("yyyy"),
-                                    showTime: String(entity.showTime),
-                                    watchGrade: entity.watchGrade,
-                                    nation: entity.nations.joined(separator: ", "),
-                                    genres: entity.genres.joined(separator: ", "),
-                                    actors: entity.actors.joined(separator: ", ")
-                )
-                self.output = output
+                self.output.info = MovieDetailController.Info(directors: entity.directors.joined(separator: ", "),
+                                                              productionYear: String(entity.productionYear),
+                                                              openingDate: entity.openingDate.formatted("yyyy"),
+                                                              showTime: String(entity.showTime),
+                                                              watchGrade: entity.watchGrade,
+                                                              nation: entity.nations.joined(separator: ", "),
+                                                              genres: entity.genres.joined(separator: ", "),
+                                                              actors: entity.actors.joined(separator: ", "))
             case .failure(let error):
                 print(error)
             }

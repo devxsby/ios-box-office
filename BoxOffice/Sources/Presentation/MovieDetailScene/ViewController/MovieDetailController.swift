@@ -9,6 +9,17 @@ import UIKit
 
 final class MovieDetailController: UIViewController {
     
+    struct Info {
+        var directors: String
+        var productionYear: String
+        var openingDate: String
+        var showTime: String
+        var watchGrade: String
+        var nation: String
+        var genres: String
+        var actors: String
+    }
+    
     // MARK: - Properties
     
     private let viewModel: MovieDetailViewModel
@@ -72,6 +83,15 @@ final class MovieDetailController: UIViewController {
         viewModel.output.$image.bind { [weak self] image in
             DispatchQueue.main.async {
                 self?.posterImageView.image = image
+            }
+        }
+        
+        viewModel.output.$info.bind { [weak self] info in
+            guard let self = self,
+                  let info = info else { return }
+            
+            DispatchQueue.main.async {
+                print(info)
             }
         }
         
