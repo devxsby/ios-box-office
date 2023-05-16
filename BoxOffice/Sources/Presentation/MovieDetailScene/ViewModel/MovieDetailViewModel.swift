@@ -20,6 +20,7 @@ final class MovieDetailViewModel: ViewModelType {
     }
     
     struct Output {
+        @Observable var name: String?
         @Observable var image: UIImage?
         @Observable var info: MovieDetailController.Info?
     }
@@ -66,9 +67,10 @@ final class MovieDetailViewModel: ViewModelType {
             case .success(let movieDetailResponse):
                 let entity = movieDetailResponse.movieInfoResult.movieInfo.toEntity()
                 
+                self.output.name = movieDetailResponse.movieInfoResult.movieInfo.name
                 self.output.info = MovieDetailController.Info(directors: entity.directors.joined(separator: ", "),
                                                               productionYear: String(entity.productionYear),
-                                                              openingDate: entity.openingDate.formatted("yyyy"),
+                                                              openingDate: entity.openingDate.formatted("yyyy-MM-dd"),
                                                               showTime: String(entity.showTime),
                                                               watchGrade: entity.watchGrade,
                                                               nation: entity.nations.joined(separator: ", "),

@@ -35,6 +35,7 @@ final class MovieDetailController: UIViewController {
     
     private let posterImageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -42,8 +43,6 @@ final class MovieDetailController: UIViewController {
     private let detailRowViews = DetailRowType.allCases.map {
         MovieDetailRowView(with: $0)
     }
-    
-//    private let directorView = MovieDetailRowView()
     
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [posterImageView] + detailRowViews)
@@ -84,6 +83,12 @@ final class MovieDetailController: UIViewController {
     
     private func bindViewModel() {
         
+        viewModel.output.$name.bind { [weak self] name in
+            DispatchQueue.main.async {
+                self?.title = name
+            }
+        }
+        
         viewModel.output.$image.bind { [weak self] image in
             DispatchQueue.main.async {
                 self?.posterImageView.image = image
@@ -100,9 +105,7 @@ final class MovieDetailController: UIViewController {
                 }
             }
         }
-        
     }
-    
 }
 
 // MARK: - UI & Layout
