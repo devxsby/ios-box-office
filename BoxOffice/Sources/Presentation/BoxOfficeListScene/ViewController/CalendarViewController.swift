@@ -23,6 +23,7 @@ final class CalendarViewController: UIViewController {
         let calendarView = UICalendarView()
         calendarView.availableDateRange = DateInterval(start: .distantPast, end: .now.previousDate)
         calendarView.translatesAutoresizingMaskIntoConstraints = false
+        calendarView.locale = Locale(identifier: "ko_KR")
         return calendarView
     }()
     
