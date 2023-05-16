@@ -119,10 +119,6 @@ final class BoxOfficeListCell: UICollectionViewListCell {
         audienceCountLabel.text = item.audienceCount
     }
     
-    func configure(with movieTitle: String) {
-        movieTitleLabel.text = movieTitle
-    }
-    
     // MARK: - Private Methods
     
     private func resetUIComponents() {
