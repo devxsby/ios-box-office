@@ -47,6 +47,11 @@ final class BoxOfficeListController: UIViewController {
         return activityIndicator
     }()
     
+    private lazy var rightButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(title: "날짜선택", style: .plain, target: self, action: #selector(rightBttonPressed))
+        return button
+    }()
+    
     // MARK: - Initialization
     
     init(viewModel: BoxOfficeListViewModel) {
@@ -97,6 +102,10 @@ final class BoxOfficeListController: UIViewController {
     @objc private func didRefresh() {
         viewModel.input = .isRefreshed
     }
+    
+    @objc private func rightBttonPressed() {
+        print("날짜선택 버튼클릭")
+    }
 }
 
 // MARK: - UI & Layout
@@ -112,6 +121,7 @@ extension BoxOfficeListController {
     private func setUI() {
         setBackgroundColor()
         setAnimatingActivityIndicator(isAnimated: true)
+        setNavigationBarItem()
     }
     
     private func setBackgroundColor() {
@@ -126,6 +136,10 @@ extension BoxOfficeListController {
         } else {
             activityIndicator.stopAnimating()
         }
+    }
+    
+    private func setNavigationBarItem() {
+        navigationItem.rightBarButtonItem = rightButton
     }
     
     private func setLayout() {
