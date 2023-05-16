@@ -7,9 +7,13 @@
 
 import UIKit
 
+// MARK: - Delegate Protocol
+
 protocol CalendarViewControllerDelegate: AnyObject {
     func calendarViewController(_ calendarView: CalendarViewController, didSelectDate dateComponents: DateComponents?)
 }
+
+// MARK: - CalendarViewController
 
 final class CalendarViewController: UIViewController {
     
@@ -17,13 +21,17 @@ final class CalendarViewController: UIViewController {
     
     weak var delegate: CalendarViewControllerDelegate?
     
+    private enum Constants {
+        static let initialDate: Date = .now.previousDate
+    }
+    
     // MARK: - UI Components
     
     private let calendarView: UICalendarView = {
         let calendarView = UICalendarView()
-        calendarView.availableDateRange = DateInterval(start: .distantPast, end: .now.previousDate)
-        calendarView.translatesAutoresizingMaskIntoConstraints = false
+        calendarView.availableDateRange = DateInterval(start: .distantPast, end: Constants.initialDate)
         calendarView.locale = Locale(identifier: "ko_KR")
+        calendarView.translatesAutoresizingMaskIntoConstraints = false
         return calendarView
     }()
     
@@ -32,13 +40,6 @@ final class CalendarViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-    }
-    
-    // MARK: - Public
-    
-    func configure(selectedDate date: Date) {
-        let dateComponents = Calendar.current.dateComponents([.day, .month, .year], from: date)
-        calendarView.visibleDateComponents = dateComponents
     }
 }
 
@@ -68,6 +69,8 @@ extension CalendarViewController {
     
     private func setCalendarViewSelection() {
         let selection = UICalendarSelectionSingleDate(delegate: self)
+        let dateComponents = Calendar.current.dateComponents([.day, .month, .year], from: Constants.initialDate)
+        selection.selectedDate = dateComponents
         calendarView.selectionBehavior = selection
     }
 }
@@ -75,6 +78,7 @@ extension CalendarViewController {
 // MARK: - UICalendarSelectionSingleDateDelegate
 
 extension CalendarViewController: UICalendarSelectionSingleDateDelegate {
+    
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
         delegate?.calendarViewController(self, didSelectDate: dateComponents)
         dismiss(animated: true)

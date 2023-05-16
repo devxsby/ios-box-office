@@ -137,7 +137,6 @@ final class BoxOfficeListController: UIViewController {
         viewModel.output.$selectedDate.bind { [weak self] date in
             guard let self = self else { return }
             self.title = date.formatted("yyyy-MM-dd")
-            self.calendarViewController.configure(selectedDate: date)
         }
     }
     
