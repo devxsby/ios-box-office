@@ -25,7 +25,7 @@ final class BoxOfficeListController: UIViewController {
     // MARK: - UI Components
     
     private lazy var boxOfficeListCollectionView: UICollectionView = {
-        let collectionview = UICollectionView(frame: .zero, collectionViewLayout: createCollectionViewLayout())
+        let collectionview = UICollectionView(frame: .zero, collectionViewLayout: collectionViewListLayout)
         collectionview.refreshControl = refreshControl
         collectionview.delegate = self
         collectionview.translatesAutoresizingMaskIntoConstraints = false
@@ -58,6 +58,23 @@ final class BoxOfficeListController: UIViewController {
         return viewController
     }()
     
+    private let collectionViewListLayout: UICollectionViewLayout = {
+        let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
+        return UICollectionViewCompositionalLayout.list(using: configuration)
+    }()
+    
+    private let collectionViewGridLayout: UICollectionViewLayout = {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5),
+                                              heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = .init(top: 10, leading: 10, bottom: 10, trailing: 10)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .fractionalHeight(1.0 / 4))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        let section = NSCollectionLayoutSection(group: group)
+        return UICollectionViewCompositionalLayout(section: section)
+    }()
+    
     // MARK: - Initialization
     
     init(viewModel: BoxOfficeListViewModel) {
@@ -76,6 +93,8 @@ final class BoxOfficeListController: UIViewController {
         setup()
         bindViewModel()
         notifyViewDidLoad()
+        
+        changeCollectionViewLayout()
     }
     
     // MARK: - Private Methods
@@ -169,6 +188,22 @@ extension BoxOfficeListController {
     private func createCollectionViewLayout() -> UICollectionViewLayout {
         let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         return UICollectionViewCompositionalLayout.list(using: configuration)
+    }
+    
+    // TODO: - 레이아웃 변경 테스트용 메서드
+    private func changeCollectionViewLayout() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+            self.boxOfficeListCollectionView.setCollectionViewLayout(self.collectionViewGridLayout, animated: true)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(4)) {
+            self.boxOfficeListCollectionView.setCollectionViewLayout(self.collectionViewListLayout, animated: true)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(6)) {
+            self.boxOfficeListCollectionView.setCollectionViewLayout(self.collectionViewGridLayout, animated: true)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(8)) {
+            self.boxOfficeListCollectionView.setCollectionViewLayout(self.collectionViewListLayout, animated: true)
+        }
     }
 }
 
