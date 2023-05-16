@@ -25,6 +25,7 @@ final class BoxOfficeListViewModel: ViewModelType {
     struct Output {
         @Observable var cellItems = [BoxOfficeListCell.Item]()
         @Observable var selectedDate = Date().previousDate
+        @Observable var isFailToLoadData: Void = ()
     }
     
     // MARK: - Properties
@@ -77,6 +78,11 @@ final class BoxOfficeListViewModel: ViewModelType {
                         rankIntensity: $0.rankIntensity,
                         audienceCount: self.audienceCountLabelText(with: $0)
                     )
+                }
+                
+                guard items.isEmpty == false else {
+                    output.isFailToLoadData = ()
+                    return
                 }
                 
                 self.output.cellItems = items

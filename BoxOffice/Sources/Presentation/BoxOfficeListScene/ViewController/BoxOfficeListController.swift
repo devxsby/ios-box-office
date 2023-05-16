@@ -75,6 +75,16 @@ final class BoxOfficeListController: UIViewController {
         return UICollectionViewCompositionalLayout(section: section)
     }()
     
+    private let emptyDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .gray
+        label.textAlignment = .center
+        label.font = .preferredFont(forTextStyle: .callout)
+        label.text = "영화정보를 받아올 수 없습니다"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     // MARK: - Initialization
     
     init(viewModel: BoxOfficeListViewModel) {
@@ -113,16 +123,27 @@ final class BoxOfficeListController: UIViewController {
                     self.refreshControl.endRefreshing()
                 }
                 self.setAnimatingActivityIndicator(isAnimated: false)
-                
                 self.appendSnapshot(with: items)
             }
         }
         
-        viewModel.output.$selectedDate.bind(isFireAtBind: true) { [weak self] date in
+        viewModel.output.$isFailToLoadData.bind(isFireAtBind: false) { [weak self] _ in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.setEmptyView(isEnabled: true)
+            }
+        }
+        
+        viewModel.output.$selectedDate.bind { [weak self] date in
             guard let self = self else { return }
             self.title = date.formatted("yyyy-MM-dd")
             self.calendarViewController.configure(selectedDate: date)
         }
+    }
+    
+    private func setEmptyView(isEnabled: Bool) {
+        boxOfficeListCollectionView.isHidden = isEnabled
+        emptyDescriptionLabel.isHidden = !isEnabled
     }
     
     @objc private func didRefresh() {
@@ -169,14 +190,20 @@ extension BoxOfficeListController {
     }
     
     private func setLayout() {
-        view.addSubview(boxOfficeListCollectionView)
-        view.addSubview(activityIndicator)
-
+        [emptyDescriptionLabel, boxOfficeListCollectionView, activityIndicator].forEach { view.addSubview($0) }
+        
         NSLayoutConstraint.activate([
             boxOfficeListCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             boxOfficeListCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             boxOfficeListCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             boxOfficeListCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            emptyDescriptionLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            emptyDescriptionLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            emptyDescriptionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            emptyDescriptionLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
