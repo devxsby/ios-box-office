@@ -52,6 +52,12 @@ final class BoxOfficeListController: UIViewController {
         return button
     }()
     
+    private lazy var calendarViewController: CalendarViewController = {
+        let viewController = CalendarViewController()
+        viewController.delegate = self
+        return viewController
+    }()
+    
     // MARK: - Initialization
     
     init(viewModel: BoxOfficeListViewModel) {
@@ -104,7 +110,7 @@ final class BoxOfficeListController: UIViewController {
     }
     
     @objc private func rightBttonPressed() {
-        print("날짜선택 버튼클릭")
+        present(calendarViewController, animated: true)
     }
 }
 
@@ -208,6 +214,14 @@ extension BoxOfficeListController: UICollectionViewDelegate {
         let movieDetailVC = DIContainer.shared.makeMovieDetailController(with: movieInfo)
         navigationController?.pushViewController(movieDetailVC, animated: true)
         collectionView.deselectItem(at: indexPath, animated: true)
+    }
+}
+
+// MARK: - CalendarViewControllerDelegate
+
+extension BoxOfficeListController: CalendarViewControllerDelegate {
+    func calendarViewController(_ calendarView: CalendarViewController, didSelectDate dateComponents: DateComponents?) {
+        print(dateComponents)
     }
 }
 
