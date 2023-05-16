@@ -49,7 +49,7 @@ final class MovieDetailRowView: UIView {
     init(with type: DetailRowType) {
         self.type = type
         super.init(frame: .zero)
-        setup(with: type)
+        setupUI(with: type)
     }
     
     required init?(coder: NSCoder) {
@@ -61,7 +61,7 @@ final class MovieDetailRowView: UIView {
 
 extension MovieDetailRowView {
     
-    private func setup(with type: DetailRowType) {
+    private func setupUI(with type: DetailRowType) {
         
         addSubview(titleLabel)
         addSubview(subtitleLabel)
@@ -90,35 +90,24 @@ extension MovieDetailRowView {
 extension MovieDetailRowView {
     
     func setupData(with info: MovieDetailController.Info) {
-        var text = ""
+        let text: String
+        
         switch type {
-        case .directors:
-            text = info.directors
-        case .productionYear:
-            text = info.productionYear
-        case .openingDate:
-            text = info.openingDate
-        case .showTime:
-            text = info.showTime
-        case .watchGrade:
-            text = info.watchGrade
-        case .nation:
-            text = info.nation
-        case .genres:
-            text = info.genres
-        case .actors:
-            text = info.actors
+        case .directors: text = info.directors
+        case .productionYear: text = info.productionYear
+        case .openingDate: text = info.openingDate
+        case .showTime: text = info.showTime
+        case .watchGrade: text = info.watchGrade
+        case .nation: text = info.nation
+        case .genres: text = info.genres
+        case .actors: text = info.actors
         }
         
-        guard text.isEmpty == false else {
-            isHidden = true
-            return
-        }
-        subtitleLabel.text = text
+        configureSubtitleLabel(with: text)
     }
     
-    func setData(title: String, subtitle: String) {
-        titleLabel.text = title
-        subtitleLabel.text = subtitle
+    private func configureSubtitleLabel(with text: String) {
+        isHidden = text.isEmpty
+        subtitleLabel.text = text
     }
 }
