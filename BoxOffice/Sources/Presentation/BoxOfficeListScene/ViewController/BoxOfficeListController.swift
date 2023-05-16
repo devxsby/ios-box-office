@@ -10,7 +10,12 @@ import UIKit
 final class BoxOfficeListController: UIViewController {
     
     // MARK: - Constants
-        
+    
+    enum PresentationMode {
+        case list
+        case grid
+    }
+    
     enum Section: Int, CaseIterable {
         case list
     }
@@ -18,6 +23,8 @@ final class BoxOfficeListController: UIViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Section, BoxOfficeListCell.Item>
     
     // MARK: - Properties
+    
+    private var mode: PresentationMode = .list
     
     private let viewModel: BoxOfficeListViewModel
     private lazy var dataSource: DataSource = makeDataSource()
@@ -48,7 +55,7 @@ final class BoxOfficeListController: UIViewController {
     }()
     
     private lazy var rightButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(title: "날짜선택", style: .plain, target: self, action: #selector(rightBttonPressed))
+        let button = UIBarButtonItem(title: "날짜선택", style: .plain, target: self, action: #selector(pressedRightButton))
         return button
     }()
     
@@ -85,6 +92,12 @@ final class BoxOfficeListController: UIViewController {
         return label
     }()
     
+    private let toolbar: UIToolbar = {
+        let toolbar = UIToolbar()
+        toolbar.translatesAutoresizingMaskIntoConstraints = false
+        return toolbar
+    }()
+    
     // MARK: - Initialization
     
     init(viewModel: BoxOfficeListViewModel) {
@@ -104,7 +117,7 @@ final class BoxOfficeListController: UIViewController {
         bindViewModel()
         notifyViewDidLoad()
         
-        changeCollectionViewLayout()
+//        changeCollectionViewLayout()
     }
     
     // MARK: - Private Methods
@@ -149,8 +162,22 @@ final class BoxOfficeListController: UIViewController {
         viewModel.input = .isRefreshed
     }
     
-    @objc private func rightBttonPressed() {
+    @objc private func pressedRightButton() {
         present(calendarViewController, animated: true)
+    }
+    
+    @objc private func pressedToolbarButton() {
+        let newMode: PresentationMode = (mode == .list) ? .grid : .list
+        
+        DispatchQueue.main.async {
+            let newLayout = (newMode == .list) ? self.collectionViewListLayout : self.collectionViewGridLayout
+            self.boxOfficeListCollectionView.setCollectionViewLayout(newLayout, animated: true)
+            
+            // 스크롤 뷰를 위로 올리는 로직 추가
+            let contentOffset = CGPoint(x: 0, y: -self.boxOfficeListCollectionView.adjustedContentInset.top)
+            self.boxOfficeListCollectionView.setContentOffset(contentOffset, animated: true)
+        }
+        mode = newMode
     }
 }
 
@@ -168,6 +195,7 @@ extension BoxOfficeListController {
         setBackgroundColor()
         setAnimatingActivityIndicator(isAnimated: true)
         setNavigationBarItem()
+        setToolBarItem()
     }
     
     private func setBackgroundColor() {
@@ -188,8 +216,14 @@ extension BoxOfficeListController {
         navigationItem.rightBarButtonItem = rightButton
     }
     
+    private func setToolBarItem() {
+        let toolbarItem = UIBarButtonItem(title: "화면 모드 변경", style: .plain, target: self, action: #selector(pressedToolbarButton))
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbar.setItems([flexibleSpace, toolbarItem, flexibleSpace], animated: true)
+    }
+    
     private func setLayout() {
-        [emptyDescriptionLabel, boxOfficeListCollectionView, activityIndicator].forEach { view.addSubview($0) }
+        [emptyDescriptionLabel, boxOfficeListCollectionView, activityIndicator, toolbar].forEach { view.addSubview($0) }
         
         NSLayoutConstraint.activate([
             boxOfficeListCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -204,6 +238,12 @@ extension BoxOfficeListController {
             emptyDescriptionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             emptyDescriptionLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+        
+        NSLayoutConstraint.activate([
+            toolbar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            toolbar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            toolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
     }
     
     private func setupCollectionView() {
@@ -214,22 +254,6 @@ extension BoxOfficeListController {
     private func createCollectionViewLayout() -> UICollectionViewLayout {
         let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         return UICollectionViewCompositionalLayout.list(using: configuration)
-    }
-    
-    // TODO: - 레이아웃 변경 테스트용 메서드
-    private func changeCollectionViewLayout() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-            self.boxOfficeListCollectionView.setCollectionViewLayout(self.collectionViewGridLayout, animated: true)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(4)) {
-            self.boxOfficeListCollectionView.setCollectionViewLayout(self.collectionViewListLayout, animated: true)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(6)) {
-            self.boxOfficeListCollectionView.setCollectionViewLayout(self.collectionViewGridLayout, animated: true)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(8)) {
-            self.boxOfficeListCollectionView.setCollectionViewLayout(self.collectionViewListLayout, animated: true)
-        }
     }
 }
 
