@@ -23,8 +23,6 @@ final class CalendarViewController: UIViewController {
         let calendarView = UICalendarView()
         calendarView.availableDateRange = DateInterval(start: .distantPast, end: .now.previousDate)
         calendarView.translatesAutoresizingMaskIntoConstraints = false
-        calendarView.locale = .current
-        print(Locale.current)
         return calendarView
     }()
     
@@ -33,6 +31,13 @@ final class CalendarViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+    }
+    
+    // MARK: - Public
+    
+    func configure(selectedDate date: Date) {
+        let dateComponents = Calendar.current.dateComponents([.day, .month, .year], from: date)
+        calendarView.visibleDateComponents = dateComponents
     }
 }
 
