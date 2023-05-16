@@ -83,7 +83,7 @@ final class MovieDetailViewModel: ViewModelType {
     }
     
     private func fetchMoviePosterImage() {
-        imageRepository.fetchMoviePoster(endPoint: .fetchImage(movieName: info.name)) { result in
+        imageRepository.fetchMoviePoster(endPoint: .searchImageFromGoogle(movieName: info.name)) { result in
             switch result {
             case .success(let image):
                 self.output.image = image

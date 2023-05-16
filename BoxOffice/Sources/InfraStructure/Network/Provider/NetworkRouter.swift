@@ -43,6 +43,7 @@ final class NetworkRouter: NetworkRouterProtocol {
             switch result {
             case .success(let data):
                 do {
+                    print("✨✨✨✨✨✨✨✨✨", endPoint, data)
                     let decodedData = try self.decoder.decode(T.self, from: data)
                     completion(.success(decodedData))
                 } catch {
